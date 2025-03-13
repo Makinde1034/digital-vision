@@ -10,7 +10,6 @@ export class LoginResponse {
   @IsNotEmpty()
   @Field()
   accessToken: string;
-
  
 
   @IsString()

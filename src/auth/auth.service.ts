@@ -15,7 +15,6 @@ export class AuthService {
 
   // creates new user
   async createUser(registerInput: RegisterInput) {
-
     // Check if user already exists
     const existingUser = await this.prisma.user.count({
       where: {
@@ -43,6 +42,35 @@ export class AuthService {
     };
   }
 
+  //  log in
+  async login(loginInput: RegisterInput) {
+    // check if user exists
+    const user = await this.prisma.user.findUnique({
+      where: { email: loginInput.email },
+    });
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    // compare provided password to stored hashed password
+    const checkPasswordMatch = await argon.verify(
+      user.hashedPassword,
+      loginInput.password,
+    );
+
+    if (!checkPasswordMatch) {
+      throw new Error('Invalid password');
+    }
+
+    const { accessToken } = await this.createToken(user.id, user.email);
+
+    return {
+      accessToken,
+      user,
+    };
+  }
+
   // creates JWT token
   async createToken(userId: number, email: string) {
     // generate an access token with email, useriD and a secret
@@ -61,8 +89,4 @@ export class AuthService {
       accessToken,
     };
   }
-
- 
-
- 
 }
