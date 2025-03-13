@@ -26,7 +26,7 @@ export class AuthService {
     if (existingUser > 0) {
       throw new Error('User with this email already exists');
     }
-    // generate hashed password
+    // generate hashed password for security
     const hashedPassword = await argon.hash(registerInput.password);
     const user = await this.prisma.user.create({
       data: {
@@ -79,7 +79,7 @@ export class AuthService {
   }
 
 
-  
+
   async biometricLogin(biometricInput: BiometricLoginInput) {
 
     const hashedBiometricKey = await argon.hash(biometricInput.biometricKey);
