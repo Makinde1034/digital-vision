@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as argon from 'argon2';
+import { BiometricLoginInput } from './dto/biometric-input';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,10 @@ export class AuthService {
       },
     });
 
-    const { accessToken } = await this.createToken(user.id, user.email);
+    const { accessToken } = await this.createToken(
+      user.id,
+      user.email as string,
+    );
 
     return {
       accessToken,
@@ -55,7 +59,7 @@ export class AuthService {
 
     // compare provided password to stored hashed password
     const checkPasswordMatch = await argon.verify(
-      user.hashedPassword,
+      user.hashedPassword as string,
       loginInput.password,
     );
 
@@ -63,7 +67,45 @@ export class AuthService {
       throw new Error('Invalid password');
     }
 
-    const { accessToken } = await this.createToken(user.id, user.email);
+    const { accessToken } = await this.createToken(
+      user.id,
+      user.email as string,
+    );
+
+    return {
+      accessToken,
+      user,
+    };
+  }
+
+
+  
+  async biometricLogin(biometricInput: BiometricLoginInput) {
+
+    const hashedBiometricKey = await argon.hash(biometricInput.biometricKey);
+
+    // Check if user with biometric key exist
+    let user = await this.prisma.user.findUnique({
+      where: {
+        biometricKey: hashedBiometricKey,
+      },
+    });
+
+    // If user with biometric  doesn't exist, create a new one
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          biometricKey: hashedBiometricKey,
+          email: '',
+          hashedPassword:''
+        },
+      });
+    }
+
+    const { accessToken } = await this.createToken(
+      user.id,
+      user.biometricKey as string,
+    );
 
     return {
       accessToken,
@@ -78,7 +120,7 @@ export class AuthService {
       {
         userId,
         email,
-      },
+      }, 
       {
         expiresIn: '2 days',
         secret: this.configService.get('ACCESS_TOKEN_SECRET'),

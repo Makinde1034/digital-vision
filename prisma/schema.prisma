@@ -15,9 +15,9 @@ datasource db {
 
 model User {
   id             Int      @id @default(autoincrement())
-  email          String   @unique
+  email          String  @unique 
   hashedPassword String
-  biometricKey   String?
+  biometricKey   String?  @unique
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
 }

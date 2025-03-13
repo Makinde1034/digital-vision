@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input BiometricLoginInput {
+  biometricKey: String!
+}
+
 type LoginResponse {
   accessToken: String!
   user: User!
@@ -10,6 +14,7 @@ type LoginResponse {
 type Mutation {
   Login(loginInput: RegisterInput!): LoginResponse!
   Register(registerInput: RegisterInput!): LoginResponse!
+  biometricLogin(biometricLoginInput: BiometricLoginInput!): LoginResponse!
 }
 
 type Query {
