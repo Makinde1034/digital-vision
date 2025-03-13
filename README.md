@@ -59,23 +59,24 @@ $ npm run test:cov
 
 ## Stack used
 
--Nestjs
--GraphQL
--Prisma
--Typescript
--Postgres
+- Nestjs
+- GraphQL
+- Prisma
+- Typescript
+- Postgres
 
 ## Features
 
--Sign up
--Login 
--Biometric login
+- Sign up
+- Login 
+- Biometric login
+- JWT Authentication
 
 
 ## Environment variables
 
--DATABASE_URL
--ACCESS_TOKEN_SECRET
+- DATABASE_URL
+- ACCESS_TOKEN_SECRET
 
 ## GraphQL schema
 
