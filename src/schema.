@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type User {
+  id: String!
+  email: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+  user: User!
+}
+
+type Query {
+  auth(id: Int!): Auth!
+}
+
+type Mutation {
+  Register(createAuthInput: RegisterInput!): LoginResponse!
+  removeAuth(id: Int!): Auth!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+}
